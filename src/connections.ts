@@ -1,7 +1,7 @@
 import { connect } from "mongoose";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 export const connectToDB = async () => {
   try {
     await connect(`${process.env.MONGO_LINK}`);

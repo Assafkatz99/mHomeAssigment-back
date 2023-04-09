@@ -33,15 +33,12 @@ export function startSocketServer(server: any) {
   initRooms();
 
   io.on("connection", (socket) => {
-    console.log("A user connected");
 
     socket.on("joinRoom", (roomId) => {
       const room = rooms[Number(roomId) - 1];
       socket.join(room.id);
       room.connected = room.connected + 1;
-      console.log("code" + room["code"]);
 
-      console.log(`User joined room ${room.id}, connected: ${room.connected}`);
       socket.emit("codeUpdate", room.code);
       socket.emit("readOnly", room.readOnly);
       socket.to(room.id).emit("userCount", room.connected);
@@ -60,21 +57,17 @@ export function startSocketServer(server: any) {
     socket.on("codeUpdate", (newCode) => {
       const room = rooms.find((r) => socket.rooms.has(r.id));
       if (room) {
-        console.log(`Received code update in room ${room.id}: ${newCode}`);
         room.code = newCode;
         socket.to(room.id).emit("codeUpdate", newCode);
       }
     });
 
     socket.on("disconnect", () => {
-      console.log("A user disconnected");
       const room = rooms.find((r) => r.id == socket.handshake.query.roomId);
       if (room) {
         if (room.connected > 0) {
           room.connected--;
-          console.log(rooms[Number(room.id) - 1]);
         }
-        console.log(`User left room ${room.id}, connected: ${room.connected}`);
         socket.to(room.id).emit("userCount", room.connected);
 
         if (room.connected === 0) {
