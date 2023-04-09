@@ -32,7 +32,7 @@ export function startSocketServer(server: any) {
   });
 
   initRooms();
-
+// handling with adding multiple users to the same room and giving them permission to view or edit 
   io.on("connection", (socket) => {
 
     socket.on("joinRoom", (roomId) => {
@@ -42,7 +42,6 @@ export function startSocketServer(server: any) {
 
       socket.emit("codeUpdate", room.code);
       socket.emit("readOnly", room.readOnly);
-      socket.to(room.id).emit("userCount", room.connected);
       if (room.connected === 1) {
         room.readOnly = true;
         room.firstClient = socket.id;
@@ -69,7 +68,6 @@ export function startSocketServer(server: any) {
         if (room.connected > 0) {
           room.connected--;
         }
-        socket.to(room.id).emit("userCount", room.connected);
 
         if (room.connected === 0) {
           room.readOnly = true;
