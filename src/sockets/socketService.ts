@@ -25,7 +25,8 @@ async function initRooms() {
 export function startSocketServer(server: any) {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000",
+      // origin: "http://localhost:3000",
+      origin: "https://mhomeassigment-front.onrender.com",
       methods: ["GET", "POST"],
     },
   });
